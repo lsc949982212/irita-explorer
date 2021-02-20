@@ -157,17 +157,25 @@ import { converCoin } from '../../helper/IritaHelper.js';
 							denom: mainToken.min_unit
 						})
 						item.value =`${Tools.formatPriceToFixed(bonded_tokens.amount,this.irisTokenFixedNumber)} ${bonded_tokens.denom.toUpperCase()}`;
-						let self_bond = dataInfomation.self_bond && dataInfomation.self_bond.amount && await converCoin(dataInfomation.self_bond)
-						let bonded_stake = self_bond ? bonded_tokens.amount - self_bond.amount : bonded_tokens.amount
+						// let self_bond = dataInfomation.self_bond && dataInfomation.self_bond.amount && await converCoin(dataInfomation.self_bond)
+						// let bonded_stake = self_bond ? bonded_tokens.amount - self_bond.amount : bonded_tokens.amount
+						// let selfBonded = {
+						// 	label:this.$t('ExplorerLang.validatorDetail.commissionInfo.bondedAndCommissionArr.children.selfBonded'),
+						// 	value: `${ self_bond ? Tools.formatPriceToFixed(self_bond.amount,this.irisTokenFixedNumber) : '0.00'} ${self_bond ? self_bond.denom.toUpperCase() : mainToken.symbol.toUpperCase()}
+						// 		(${self_bond ? (Tools.formatPerNumber((self_bond.amount / Number(bonded_tokens.amount)) * 100)) : '0.00'} %)`
+						// };
+						// let delegatorBonded = {
+						// 	label:this.$t('ExplorerLang.validatorDetail.commissionInfo.bondedAndCommissionArr.children.delegatorBonded'),
+						// 	value:`${Tools.formatPriceToFixed(bonded_stake,this.irisTokenFixedNumber)} ${mainToken.symbol.toUpperCase()}
+						// 		 (${Tools.formatPerNumber((Number(bonded_stake) / Number(bonded_tokens.amount)) * 100)} %)`
+						// };
 						let selfBonded = {
 							label:this.$t('ExplorerLang.validatorDetail.commissionInfo.bondedAndCommissionArr.children.selfBonded'),
-							value: `${ self_bond ? Tools.formatPriceToFixed(self_bond.amount,this.irisTokenFixedNumber) : '0.00'} ${self_bond ? self_bond.denom.toUpperCase() : mainToken.symbol.toUpperCase()}
-								(${self_bond ? (Tools.formatPerNumber((self_bond.amount / Number(bonded_tokens.amount)) * 100)) : '0.00'} %)`
+							value: '--'
 						};
 						let delegatorBonded = {
 							label:this.$t('ExplorerLang.validatorDetail.commissionInfo.bondedAndCommissionArr.children.delegatorBonded'),
-							value:`${Tools.formatPriceToFixed(bonded_stake,this.irisTokenFixedNumber)} ${mainToken.symbol.toUpperCase()}
-								 (${Tools.formatPerNumber((Number(bonded_stake) / Number(bonded_tokens.amount)) * 100)} %)`
+							value: '--'
 						};
 						item.children.unshift(selfBonded,delegatorBonded)
 					}else if(item.dataName === 'delegator_shares'){
@@ -179,6 +187,8 @@ import { converCoin } from '../../helper/IritaHelper.js';
 						item.value = `${Tools.formatPriceToFixed(dataInfomation.delegator_shares,this.irisTokenFixedNumber)}`
 					}else if(item.dataName === 'commission_rate'){
 						item.value = `${Tools.formatPerNumber(Number(dataInfomation.commission_rate) * 100)} %`
+					} else if (item.dataName === 'delegator_num') {
+						item.value = '--'
 					}else {
 						item.value = dataInfomation[item.dataName]
 					}
