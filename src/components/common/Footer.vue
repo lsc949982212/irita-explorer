@@ -34,6 +34,7 @@
 	import prodConfig from "../../productionConfig"
 	import { getNodeInfo } from "../../service/api"
 	import {moduleSupport} from "../../helper/ModulesHelper"
+	import {product} from '../../constant'
 	export default {
 		name: "Footer",
 		data(){
@@ -59,7 +60,11 @@
 				let nodeInfo = await getNodeInfo();
 				if (nodeInfo) {
 					this.chainId = `Chain ID ${nodeInfo.node_info.network || '--'}`;
-					this.version = `Node Version ${nodeInfo.application_version.version || '--'}`;
+					if(prodConfig.product == product.cosmosHub) {
+						this.version = `Node Version ${nodeInfo.application_version.name} v${nodeInfo.application_version.version || '--'}`;
+					} else {
+						this.version = `Node Version ${nodeInfo.application_version.version || '--'}`;
+					}
 				}
 			}
 		}
