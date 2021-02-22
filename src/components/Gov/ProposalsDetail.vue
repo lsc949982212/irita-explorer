@@ -447,8 +447,17 @@ export default {
           this.yesThresholdValue = res.threshold && `${(Number(res.threshold) * 100).toFixed(2)}%`
           this.vetoThresholdValue = res.veto_threshold && `${(Number(res.veto_threshold) * 100).toFixed(2)}%`
           if (res.current_tally_result) {
-            let tally = res.current_tally_result
-            this.currentParticipationValue = tally.total_voting_power ? Tools.formatPercentageNumbers(tally.total_voting_power, tally.system_voting_power) : '0.00%'
+            let tally;
+            if(res.current_tally_result.system_voting_power) {
+              tally = res.current_tally_result;
+              this.currentParticipationValue = tally.total_voting_power ? Tools.formatPercentageNumbers(tally.total_voting_power, tally.system_voting_power) : '0.00%';
+            } else {
+              tally = res.final_tally_result
+              let total_voting_power = 0
+              Object.values(res.final_tally_result).forEach(num => total_voting_power += num)
+              tally.total_voting_power = total_voting_power
+              this.currentParticipationValue = '0.00%'
+            }
             this.currentYesValue = tally.yes ? Tools.formatPercentageNumbers(tally.yes, tally.total_voting_power) : '0.00%'
             this.currentNoValue = tally.no ? Tools.formatPercentageNumbers(tally.no, tally.total_voting_power) : '0.00%'
             this.currentNoWithVetoValue = tally.no_with_veto ? Tools.formatPercentageNumbers(tally.no_with_veto, tally.total_voting_power) : '0.00%'

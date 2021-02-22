@@ -133,9 +133,14 @@
 			        this.passThreshold = votingBarObj.threshold && `${(Number(votingBarObj.threshold) * 100).toFixed(2)}%`;
 			        this.voteThreshold = votingBarObj.veto_threshold && `${(Number(votingBarObj.veto_threshold) * 100).toFixed(2)}%`;
                     this.getVotingEndTime(votingBarObj.voting_end_time);
-                    let currentTally = votingBarObj.current_tally_result;
+                    let currentTally;
+                    if(votingBarObj.current_tally_result && votingBarObj.current_tally_result.system_voting_power) {
+                        currentTally = votingBarObj.current_tally_result;
+                    } else {
+                        currentTally = votingBarObj.final_tally_result;
+                    }
                     if(currentTally) {
-                        this.systemVotingPower =currentTally.system_voting_power;
+                        this.systemVotingPower = currentTally.system_voting_power;
                         this.yesVotingPowerWidth = currentTally.yes ? Tools.formatPercentageNumbers(currentTally.yes,currentTally.total_voting_power): '0.00%';
                         if(Tools.formatPercentageNumbers(currentTally.yes,currentTally.total_voting_power,'') > Number(votingBarObj.threshold)*100) {
                             this.flShowPassThreshold = true
@@ -152,11 +157,11 @@
                         this.$set(this.vetoVotingPowerStyleObj,'width',`${this.vetoVotingPowerWidth}`);
                         this.abstainVotingPowerWidth = currentTally.abstain ? Tools.formatPercentageNumbers(currentTally.abstain,currentTally.total_voting_power) :'0.00%';
                         this.$set(this.abstainVotingPowerStyleObj,'width',`${this.abstainVotingPowerWidth}`);
-                        this.totalVoted = currentTally.total_voting_power ? Tools.formatPercentageNumbers(currentTally.total_voting_power,currentTally.system_voting_power) : '0.00%';
+                        this.totalVoted = currentTally.total_voting_power && currentTally.system_voting_power  ? Tools.formatPercentageNumbers(currentTally.total_voting_power,currentTally.system_voting_power) : '0.00%';
                         if(Tools.formatPercentageNumbers(currentTally.total_voting_power,currentTally.system_voting_power,'') > Number(votingBarObj.quorum)*100) {
                             this.flHighlightParticipation = true
                         }
-                        this.delegatorVoted = currentTally.total_voting_power ? Tools.formatPercentageNumbers(currentTally.total_voting_power,currentTally.system_voting_power) : '0.00%';
+                        this.delegatorVoted = currentTally.total_voting_power && currentTally.system_voting_power ? Tools.formatPercentageNumbers(currentTally.total_voting_power,currentTally.system_voting_power) : '0.00%';
                         this.$set(this.minTotalTipStyleNumber,'left',`${this.delegatorVoted}`);
                     }
                 }
